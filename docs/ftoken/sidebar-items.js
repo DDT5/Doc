@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["contract",""],["ftoken_mod",""],["msg",""],["receiver",""],["state",""]]});

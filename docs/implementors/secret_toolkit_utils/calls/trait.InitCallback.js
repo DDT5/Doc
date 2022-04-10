@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["fractionalizer"] = [{"text":"impl InitCallback for <a class=\"struct\" href=\"fractionalizer/msg/struct.InitFtoken.html\" title=\"struct fractionalizer::msg::InitFtoken\">InitFtoken</a>","synthetic":false,"types":["fractionalizer::msg::InitFtoken"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["space_pad","Originally in SNIP20 ref impl msg.rs file, which its receiver.rs refers to Take a Vec and pad it up to a multiple of `block_size`, using spaces at the end."]],"struct":[["Snip20ReceiveMsg","Snip20ReceiveMsg should be de/serialized under `Receive()` variant in a HandleMsg"]]});

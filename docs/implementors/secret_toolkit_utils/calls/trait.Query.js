@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["ftoken"] = [{"text":"impl Query for <a class=\"enum\" href=\"ftoken/ftoken_mod/msg/enum.S721QueryMsg.html\" title=\"enum ftoken::ftoken_mod::msg::S721QueryMsg\">S721QueryMsg</a>","synthetic":false,"types":["ftoken::ftoken_mod::msg::S721QueryMsg"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

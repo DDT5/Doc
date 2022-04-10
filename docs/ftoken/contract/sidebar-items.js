@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["PREFIX_REVOKED_PERMITS",""],["RESPONSE_BLOCK_SIZE","We make sure that responses from `handle` are padded to a multiple of this size."]],"fn":[["handle",""],["init",""],["query",""],["query_allowance",""],["query_balance",""],["query_transactions",""],["query_transfers",""],["try_create_key",""],["try_set_key",""],["viewing_keys_queries",""]]});

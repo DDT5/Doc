@@ -1,0 +1,4 @@
+(function() {var implementors = {};
+implementors["fsnft_utils"] = [{"text":"impl HandleCallback for <a class=\"enum\" href=\"fsnft_utils/enum.InterContrMsg.html\" title=\"enum fsnft_utils::InterContrMsg\">InterContrMsg</a>","synthetic":false,"types":["fsnft_utils::InterContrMsg"]}];
+implementors["ftoken"] = [{"text":"impl HandleCallback for <a class=\"enum\" href=\"ftoken/ftoken_mod/msg/enum.InitRes.html\" title=\"enum ftoken::ftoken_mod::msg::InitRes\">InitRes</a>","synthetic":false,"types":["ftoken::ftoken_mod::msg::InitRes"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

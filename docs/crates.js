@@ -1,0 +1,1 @@
+window.ALL_CRATES = ["fractionalizer","fsnft_utils","ftoken"];

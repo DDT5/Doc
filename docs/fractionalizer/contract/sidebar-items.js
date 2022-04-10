@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["RESPONSE_BLOCK_SIZE",""]],"fn":[["handle",""],["init",""],["query",""],["try_batch_receive_nft",""],["try_fractionalize",""],["try_receive_ftoken_callback","Receives InitResponse from ftoken contract Registers the ftoken contract, then sends NFT from depositor to ftoken contract inventory"],["try_transfer_nft",""]]});

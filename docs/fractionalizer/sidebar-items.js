@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["contract",""],["msg",""],["receiver",""],["state",""]]});
