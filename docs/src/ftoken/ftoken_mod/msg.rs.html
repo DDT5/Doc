@@ -283,6 +283,33 @@
 <span id="281">281</span>
 <span id="282">282</span>
 <span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
@@ -297,7 +324,8 @@
 <span class="kw">use</span> <span class="ident">secret_toolkit</span>::{
     <span class="comment">// serialization::{Json, Serde}, </span>
     <span class="ident">utils</span>::{<span class="ident">HandleCallback</span>, <span class="ident">Query</span>}, 
-    <span class="ident">snip721</span>::{<span class="ident">ViewerInfo</span>, <span class="ident">AccessLevel</span>, <span class="ident">Metadata</span>, <span class="ident">Expiration</span>},
+    <span class="ident">snip721</span>::{<span class="ident">ViewerInfo</span>, <span class="ident">AccessLevel</span>, <span class="ident">Metadata</span>, <span class="ident">Expiration</span>, <span class="ident">NftDossier</span>, 
+    },
 }; 
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">contract</span>::{<span class="ident">RESPONSE_BLOCK_SIZE</span>}, 
@@ -305,7 +333,7 @@
 };
 
 <span class="kw">use</span> <span class="kw">super</span>::{
-    <span class="ident">state</span>::{<span class="ident">PropInfo</span>, <span class="ident">StakedTokens</span>},
+    <span class="ident">state</span>::{<span class="ident">StakedTokens</span>, <span class="ident">ResvVote</span>, <span class="ident">PropInfoTally</span>, <span class="ident">VoteRegister</span>, <span class="ident">BidInfo</span>},
 };
 
 <span class="comment">/////////////////////////////////////////////////////////////////////////////////</span>
@@ -390,21 +418,12 @@
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">JsonSchema</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;snake_case&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">FtokenPermQuery</span> {
-    <span class="ident">PrivateMetadata</span> { },
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">FtokenAuthQuery</span> {
+    <span class="ident">NftPrivateMetadata</span> { },
+    <span class="ident">NftDossier</span> { },
     <span class="ident">StakedTokens</span> { },
     <span class="ident">ReservationPriceVote</span> { },
-    <span class="ident">ProposalVotes</span> { },
-    <span class="ident">Bid</span> { },
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">JsonSchema</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;snake_case&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">FtokenVkQuery</span> {
-    <span class="ident">PrivateMetadata</span> { },
-    <span class="ident">StakedTokens</span> { },
-    <span class="ident">ReservationPriceVote</span> { },
-    <span class="ident">ProposalVotes</span> { },
+    <span class="ident">ProposalVotes</span> { <span class="ident">prop_id</span>: <span class="ident">u32</span> },
     <span class="ident">Bid</span> { },
 }
 
@@ -427,19 +446,17 @@
         <span class="ident">ftokens_voted</span>: <span class="ident">Uint128</span>,
         <span class="ident">reservation_price</span>: <span class="ident">Uint128</span>,
     },
-    <span class="ident">ProposalList</span> { 
-        <span class="ident">prop_list</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PropInfo</span><span class="op">&gt;</span>,
-    },
+    <span class="ident">ProposalList</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PropInfoTally</span><span class="op">&gt;</span>),
     <span class="ident">BidList</span> { 
         <span class="ident">bid_amounts</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Uint128</span><span class="op">&gt;</span>,
+        <span class="ident">total_bids</span>: <span class="ident">u64</span>,
     },
-    <span class="ident">PrivateMetadata</span> { },
-    <span class="ident">StakedTokens</span> { 
-        <span class="ident">staked_ftkns</span>: <span class="ident">StakedTokens</span>,
-    },
-    <span class="ident">ReservationPriceVote</span> { },
-    <span class="ident">ProposalVotes</span> { },
-    <span class="ident">Bid</span> { },
+    <span class="ident">NftPrivateMetadata</span>(<span class="ident">PrivateMetadataResponse</span>),
+    <span class="ident">NftDossier</span>(<span class="ident">NftDossierResponse</span>),
+    <span class="ident">StakedTokens</span>(<span class="ident">StakedTokens</span>),
+    <span class="ident">ReservationPriceVote</span>(<span class="ident">ResvVote</span>),
+    <span class="ident">ProposalVotes</span>(<span class="ident">VoteRegister</span>),
+    <span class="ident">Bid</span>(<span class="ident">BidInfo</span>),
 }
 
 <span class="comment">/////////////////////////////////////////////////////////////////////////////////</span>
@@ -532,7 +549,8 @@
     },
 }
 
-<span class="doccomment">/// Query messages to be sent to SNIP721 contract </span>
+<span class="doccomment">/// Query messages to be sent to SNIP721 contract. Uses viewing key for cross</span>
+<span class="doccomment">/// contract query, rather than permits</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">JsonSchema</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;snake_case&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">S721QueryMsg</span> {
@@ -549,19 +567,55 @@
         <span class="doccomment">/// false, expired Approvals will be filtered out of the response</span>
         <span class="ident">include_expired</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
     },
+    <span class="doccomment">/// displays the private metadata if permitted to view it</span>
+    <span class="ident">PrivateMetadata</span> {
+        <span class="ident">token_id</span>: <span class="ident">String</span>,
+        <span class="doccomment">/// optional address and key requesting to view the private metadata</span>
+        <span class="ident">viewer</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ViewerInfo</span><span class="op">&gt;</span>,
+    },
+    <span class="doccomment">/// displays all the information about a token that the viewer has permission to</span>
+    <span class="doccomment">/// see.  This may include the owner, the public metadata, the private metadata, royalty</span>
+    <span class="doccomment">/// information, mint run information, whether the token is unwrapped, whether the token is</span>
+    <span class="doccomment">/// transferable, and the token and inventory approvals</span>
+    <span class="ident">NftDossier</span> {
+        <span class="ident">token_id</span>: <span class="ident">String</span>,
+        <span class="doccomment">/// optional address and key requesting to view the token information</span>
+        <span class="ident">viewer</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ViewerInfo</span><span class="op">&gt;</span>,
+        <span class="doccomment">/// optionally include expired Approvals in the response list.  If ommitted or</span>
+        <span class="doccomment">/// false, expired Approvals will be filtered out of the response</span>
+        <span class="ident">include_expired</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
+    },
 }
 
 <span class="kw">impl</span> <span class="ident">Query</span> <span class="kw">for</span> <span class="ident">S721QueryMsg</span> {
     <span class="kw">const</span> <span class="ident">BLOCK_SIZE</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">RESPONSE_BLOCK_SIZE</span>;
 }
 
-<span class="doccomment">/// Proposal</span>
+<span class="doccomment">/// wrapper to deserialize `PrivateMetadata` responses, with additional implementations</span>
+<span class="doccomment">/// /// above the standard implementation in `secret_toolkit`</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">JsonSchema</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PrivateMetadataResponse</span> {
+    <span class="kw">pub</span> <span class="ident">private_metadata</span>: <span class="ident">Metadata</span>,
+}
+
+<span class="doccomment">/// wrapper to deserialize `NftDossier` responses, with additional implementations</span>
+<span class="doccomment">/// above the standard implementation in `secret_toolkit`</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">JsonSchema</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NftDossierResponse</span> {
+    <span class="kw">pub</span> <span class="ident">nft_dossier</span>: <span class="ident">NftDossier</span>,
+}
+
+<span class="doccomment">/// DAO proposals that an ftoken holder can make. A minimum amount of tokens</span>
+<span class="doccomment">/// need to be staked along with proposals </span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">JsonSchema</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;snake_case&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Proposal</span> {
+    <span class="doccomment">/// Proposal to send a message to the underlying NFT</span>
     <span class="ident">MsgToNft</span> {
         <span class="ident">msg</span>: <span class="ident">AllowedNftMsg</span>,
     },
+    <span class="doccomment">/// Proposals to change the ftoken configuration, which includes auction</span>
+    <span class="doccomment">/// configurations and DAO configurations</span>
     <span class="ident">ChangeConfig</span> {
         <span class="ident">config</span>: <span class="ident">FtokenConf</span>,
     },

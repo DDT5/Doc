@@ -658,6 +658,31 @@
 <span id="656">656</span>
 <span id="657">657</span>
 <span id="658">658</span>
+<span id="659">659</span>
+<span id="660">660</span>
+<span id="661">661</span>
+<span id="662">662</span>
+<span id="663">663</span>
+<span id="664">664</span>
+<span id="665">665</span>
+<span id="666">666</span>
+<span id="667">667</span>
+<span id="668">668</span>
+<span id="669">669</span>
+<span id="670">670</span>
+<span id="671">671</span>
+<span id="672">672</span>
+<span id="673">673</span>
+<span id="674">674</span>
+<span id="675">675</span>
+<span id="676">676</span>
+<span id="677">677</span>
+<span id="678">678</span>
+<span id="679">679</span>
+<span id="680">680</span>
+<span id="681">681</span>
+<span id="682">682</span>
+<span id="683">683</span>
 </pre><pre class="rust"><code><span class="attribute">#![<span class="ident">allow</span>(<span class="ident">clippy::field_reassign_with_default</span>)]</span> <span class="comment">// This is triggered in `#[derive(JsonSchema)]`</span>
 
 <span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
@@ -678,7 +703,7 @@
 <span class="comment">//     receiver::Snip20ReceiveMsg,</span>
 <span class="comment">// };</span>
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ftoken_mod</span>::{
-    <span class="ident">msg</span>::{<span class="ident">Proposal</span>, <span class="ident">FtokenQuery</span>, <span class="ident">FtokenPermQuery</span>, <span class="ident">FtokenVkQuery</span>, <span class="ident">FtokenQueryAnswer</span>},
+    <span class="ident">msg</span>::{<span class="ident">Proposal</span>, <span class="ident">FtokenQuery</span>, <span class="ident">FtokenAuthQuery</span>, <span class="ident">FtokenQueryAnswer</span>},
     <span class="ident">state</span>::{<span class="ident">Vote</span>},
 };
 
@@ -915,7 +940,8 @@
         <span class="doccomment">/// optional message to control receiving logic</span>
         <span class="ident">msg</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Binary</span><span class="op">&gt;</span>,
     },
-    <span class="doccomment">/// Bidder calls this function to place a bid for underlying NFT</span>
+    <span class="doccomment">/// Bidder calls this function to place a bid for underlying NFT. Bid needs to be at least as</span>
+    <span class="doccomment">/// large as the reservation price, otherwise the tx is invalid</span>
     <span class="ident">Bid</span> {
         <span class="doccomment">/// bid amount denominated in the smallest denomination of the token</span>
         <span class="ident">amount</span>: <span class="ident">Uint128</span>
@@ -923,16 +949,24 @@
 
     <span class="comment">// /// Receiver interface for sSCRT contract&#39;s `SendFrom` callback</span>
     <span class="comment">// Receive(Snip20ReceiveMsg),</span>
-    <span class="doccomment">/// Stake ftokens</span>
+    <span class="doccomment">/// Stake ftokens. Ftoken holders need to stake ftokens before voting on either</span>
+    <span class="doccomment">/// proposals or the reservation price. Staked ftokens will be bonded for a period</span>
+    <span class="doccomment">/// specified by the configuration </span>
     <span class="ident">Stake</span> {
+        <span class="doccomment">/// The amount that the ftoken holder wishes to stake</span>
         <span class="ident">amount</span>: <span class="ident">Uint128</span>,
     },
-    <span class="doccomment">/// Unstake ftokens</span>
+    <span class="doccomment">/// Unstake ftokens. Ftoken holders can unstake ftokens after the bonding period</span>
     <span class="ident">Unstake</span> {
+        <span class="doccomment">/// The amount that the ftoken holder wishes to unstake</span>
         <span class="ident">amount</span>: <span class="ident">Uint128</span>,
     },
+    <span class="doccomment">/// Votes for DAO proposals to change configuration of the ftokens or send messages</span>
+    <span class="doccomment">/// to the underlying NFT</span>
     <span class="ident">VoteProposal</span> {
+        <span class="doccomment">/// The proposal ID</span>
         <span class="ident">prop_id</span>: <span class="ident">u32</span>,
+        <span class="doccomment">/// The vote that the user wishes to cast on the proposal</span>
         <span class="ident">vote</span>: <span class="ident">Vote</span>,
     },
     <span class="ident">FinalizeAuction</span> { },
@@ -941,18 +975,34 @@
     <span class="comment">//     /// the underlying nft token idx, which can be obtained via query (todo)</span>
     <span class="comment">//     bid_id: u32,</span>
     <span class="comment">// },</span>
+    <span class="doccomment">/// If a bidder fails to win an auction, the bidder can retrieve its bid after the </span>
+    <span class="doccomment">/// auction period if over</span>
     <span class="ident">RetrieveBid</span> { },
+    <span class="doccomment">/// Once an underlying NFT is bought out, ftoken holders can claim their pro-rata</span>
+    <span class="doccomment">/// share of sales proceeds</span>
     <span class="ident">ClaimProceeds</span> { },
+    <span class="doccomment">/// Make a DAO proposal</span>
     <span class="ident">Propose</span> {
         <span class="ident">proposal</span>: <span class="ident">Proposal</span>,
+        <span class="doccomment">/// Users need to stake a certain number of ftokens when making proposals, which </span>
+        <span class="doccomment">/// is set initially and can be later configured through the DAO. This stake can</span>
+        <span class="doccomment">/// be retrieve once the proposal&#39;s voting period is over and the outcome finalized.</span>
+        <span class="doccomment">/// Proposers lose their stake if their proposal outcome is `LostWithVeto`</span>
         <span class="ident">stake</span>: <span class="ident">Uint128</span>,
     },
+    <span class="doccomment">/// Once a proposal reaches the end of its voting period, anyone may call this </span>
+    <span class="doccomment">/// transaction to simultaneously finalize the vote count and execute the proposal</span>
     <span class="ident">FinalizeExecuteProp</span> {
         <span class="ident">prop_id</span>: <span class="ident">u32</span>,
     },
+    <span class="doccomment">/// Proposers may retrieve their staked ftokens after proposals are finalized and</span>
+    <span class="doccomment">/// executed. This stake is lost if the vote outcome is `LostWithVeto`</span>
     <span class="ident">RetrievePropStake</span> {
         <span class="ident">prop_id</span>: <span class="ident">u32</span>,
     },
+    <span class="doccomment">/// ftoken holders whic have staked ftokens may vote a reservation price for </span>
+    <span class="doccomment">/// the underlying NFT. The weighted average votes on reservation price will be </span>
+    <span class="doccomment">/// the minimum bid amount that bidders need to make to buy out the underlying NFT</span>
     <span class="ident">VoteReservationPrice</span> {
         <span class="ident">resv_price</span>: <span class="ident">Uint128</span>,
     }
@@ -1133,7 +1183,7 @@
     <span class="ident">FtokenVkQuery</span> {
         <span class="ident">address</span>: <span class="ident">HumanAddr</span>,
         <span class="ident">key</span>: <span class="ident">String</span>,
-        <span class="ident">query</span>: <span class="ident">FtokenVkQuery</span>,
+        <span class="ident">query</span>: <span class="ident">FtokenAuthQuery</span>,
     },
     <span class="comment">// temporary for DEBUGGING. Must remove for final implementation</span>
     <span class="ident">DebugQuery</span> {  },
@@ -1179,7 +1229,7 @@
         <span class="ident">page_size</span>: <span class="ident">u32</span>,
     },
     <span class="comment">// ftoken additions:</span>
-    <span class="ident">FtokenPermitQuery</span>(<span class="ident">FtokenPermQuery</span>),
+    <span class="ident">FtokenPermitQuery</span>(<span class="ident">FtokenAuthQuery</span>),
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">JsonSchema</span>, <span class="ident">Debug</span>)]</span>

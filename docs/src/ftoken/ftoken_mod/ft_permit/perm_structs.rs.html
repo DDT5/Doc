@@ -195,6 +195,8 @@
 <span id="193">193</span>
 <span id="194">194</span>
 <span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
 </pre><pre class="rust"><code><span class="attribute">#![<span class="ident">allow</span>(<span class="ident">clippy::field_reassign_with_default</span>)]</span> <span class="comment">// This is triggered in `#[derive(JsonSchema)]`</span>
 
 <span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
@@ -380,7 +382,9 @@
     <span class="doccomment">/// address will view the data by creating their own permit with Owner permission</span>
     <span class="ident">Owner</span>,
     <span class="doccomment">/// For ftokens: PrivateMetadata of underlying NFT</span>
-    <span class="ident">PrivateMetadata</span>,
+    <span class="ident">NftPrivateMetadata</span>,
+    <span class="doccomment">/// For ftokens: NftDossier of underlying NFT</span>
+    <span class="ident">NftDossier</span>,
     <span class="doccomment">/// For ftokens: Staked ftokens associated with the address</span>
     <span class="ident">StakedTokens</span>,
     <span class="doccomment">/// For ftokens: Reservation price vote by the address</span>

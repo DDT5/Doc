@@ -1493,7 +1493,7 @@
         <span class="ident">votes_w</span>, <span class="ident">votes_r</span>, <span class="ident">votes_total_w</span>, <span class="ident">votes_total_r</span>, 
         <span class="ident">agg_resv_price_w</span>, <span class="ident">agg_resv_price_r</span>, <span class="ident">resv_price_w</span>, <span class="ident">resv_price_r</span>,
         <span class="ident">auction_info_w</span>, <span class="ident">auction_info_r</span>,
-        <span class="ident">PropInfo</span>, <span class="ident">StakedTokens</span>, <span class="ident">Vote</span>, <span class="ident">VoteRegister</span>, <span class="ident">TotalVotes</span>, <span class="ident">VoteResult</span>,
+        <span class="ident">PropInfo</span>, <span class="ident">StakedTokens</span>, <span class="ident">Vote</span>, <span class="ident">VoteRegister</span>, <span class="ident">VoteResult</span>,
         <span class="ident">ResvVote</span>, <span class="ident">AuctionInfo</span>, <span class="ident">BidInfo</span>,
         <span class="ident">U256</span>, 
         },
@@ -1805,7 +1805,7 @@
     <span class="ident">props_w</span>(<span class="kw-2">&amp;mut</span> <span class="ident">deps</span>.<span class="ident">storage</span>).<span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="ident">prop_id</span>.<span class="ident">to_le_bytes</span>(), <span class="kw-2">&amp;</span><span class="ident">prop_info</span>)<span class="question-mark">?</span>;
 
     <span class="comment">// initialize votes_total to 0</span>
-    <span class="ident">votes_total_w</span>(<span class="kw-2">&amp;mut</span> <span class="ident">deps</span>.<span class="ident">storage</span>).<span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="ident">prop_id</span>.<span class="ident">to_le_bytes</span>(), <span class="kw-2">&amp;</span><span class="ident">TotalVotes::default</span>())<span class="question-mark">?</span>;
+    <span class="ident">votes_total_w</span>(<span class="kw-2">&amp;mut</span> <span class="ident">deps</span>.<span class="ident">storage</span>).<span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="ident">prop_id</span>.<span class="ident">to_le_bytes</span>(), <span class="kw-2">&amp;</span><span class="ident">VoteRegister::default</span>())<span class="question-mark">?</span>;
 
     <span class="comment">// add 1 to bid_id count</span>
     <span class="ident">prop_id_w</span>(<span class="kw-2">&amp;mut</span> <span class="ident">deps</span>.<span class="ident">storage</span>).<span class="ident">save</span>(<span class="kw-2">&amp;</span><span class="ident">prop_id</span>.<span class="ident">add</span>(<span class="number">1u32</span>))<span class="question-mark">?</span>;
@@ -2721,7 +2721,7 @@
     )
 }
 
-<span class="kw">fn</span> <span class="ident">calc_pro_rata</span>(
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">calc_pro_rata</span>(
     <span class="ident">num</span>: <span class="ident">u128</span>,
     <span class="ident">denom</span>: <span class="ident">u128</span>,
     <span class="ident">normalized_to</span>: <span class="ident">u128</span>,
