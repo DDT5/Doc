@@ -272,6 +272,9 @@
 <span id="270">270</span>
 <span id="271">271</span>
 <span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">schemars::JsonSchema</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 <span class="kw">use</span> <span class="ident">cosmwasm_std</span>::{
@@ -380,49 +383,49 @@
 <span class="doccomment">/// Sent as init in fractionalize tx, and stored in ftoken contract </span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">JsonSchema</span>, <span class="ident">Default</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FtokenConf</span> {
-    <span class="doccomment">/// number of blocks that ftokens will be bonded after a vote (on reservation</span>
+    <span class="doccomment">/// Number of blocks that ftokens will be bonded after a vote (on reservation</span>
     <span class="doccomment">/// price or on proposals). Important to prevent vote spamming and manipulation </span>
     <span class="kw">pub</span> <span class="ident">min_ftkn_bond_prd</span>: <span class="ident">u64</span>,
-    <span class="doccomment">/// proportion of ftoken ownership required before private metadata of underlying</span>
+    <span class="doccomment">/// Proportion of ftoken ownership required before private metadata of underlying</span>
     <span class="doccomment">/// NFT can be queried by ftoken owner. This needs to be done with authenticated</span>
     <span class="doccomment">/// query, either through viewing keys or viewing permit. Unit in basis points (ie:</span>
     <span class="doccomment">/// 1/10_000)</span>
     <span class="kw">pub</span> <span class="ident">priv_metadata_view_threshold</span>: <span class="ident">u32</span>,
-    <span class="doccomment">/// configurations for auctions</span>
+    <span class="doccomment">/// Configurations for auctions</span>
     <span class="kw">pub</span> <span class="ident">auc_conf</span>: <span class="ident">AucConf</span>,
-    <span class="comment">// configurations for proposals</span>
+    <span class="doccomment">/// Configurations for proposals</span>
     <span class="kw">pub</span> <span class="ident">prop_conf</span>: <span class="ident">PropConf</span>,
 }
 
 <span class="doccomment">/// ftoken config for bidding. Nested in a larger struct</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">JsonSchema</span>, <span class="ident">Default</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AucConf</span> {
-    <span class="doccomment">/// determines the token that bids are made in (eg: sSCRT)</span>
+    <span class="doccomment">/// Determines the token that bids are made in (eg: sSCRT)</span>
     <span class="kw">pub</span> <span class="ident">bid_token</span>: <span class="ident">ContractInfo</span>,
-    <span class="doccomment">/// number of blocks that a bid remains live before a finalize_vote_count tx can be called</span>
+    <span class="doccomment">/// Number of blocks that a bid remains live before a finalize_vote_count tx can be called</span>
     <span class="kw">pub</span> <span class="ident">auc_period</span>: <span class="ident">u64</span>,
-    <span class="doccomment">/// user needs to vote a reservation price within this boundary. Boundary is the percentage above and below</span>
+    <span class="doccomment">/// User needs to vote a reservation price within this boundary. Boundary is the percentage above and below</span>
     <span class="doccomment">/// current reservation price.</span>
     <span class="doccomment">/// Floor = `current reservation price` * 100 / `minmax_boundary`.</span>
     <span class="doccomment">/// Ceiling = `current reservation price` * `minmax_boundary` / 100.</span>
     <span class="kw">pub</span> <span class="ident">resv_boundary</span>: <span class="ident">u32</span>,
-    <span class="doccomment">/// min bid increment proportion in basis points ie: 1/10_000. So a setting of 10 means that if the current highest bid</span>
+    <span class="doccomment">/// Min bid increment proportion in basis points ie: 1/10_000. So a setting of 10 means that if the current highest bid</span>
     <span class="doccomment">/// is 100_000 tokens, the next bid needs to be at least 1/1000 higher, or 100_100 tokens  </span>
     <span class="kw">pub</span> <span class="ident">min_bid_inc</span>: <span class="ident">u32</span>,
-    <span class="doccomment">/// proportion of ftoken OF TOTAL SUPPLY before NFT gets unlocked. Unit in basis points (1/1000)</span>
+    <span class="doccomment">/// Proportion of ftoken OF TOTAL SUPPLY before NFT gets unlocked. Unit in basis points (1/1000)</span>
     <span class="kw">pub</span> <span class="ident">unlock_threshold</span>: <span class="ident">Uint128</span>,
 }
 
 <span class="doccomment">/// ftoken contract config for dao proposals. Nested in a larger struct</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">JsonSchema</span>, <span class="ident">Default</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PropConf</span> {
-    <span class="doccomment">/// minimum ftoken stake to make a proposal</span>
+    <span class="doccomment">/// Minimum ftoken stake to make a proposal</span>
     <span class="kw">pub</span> <span class="ident">min_stake</span>: <span class="ident">Uint128</span>,
-    <span class="doccomment">/// number of blocks that a proposal remains live before a finalization tx can be called</span>
+    <span class="doccomment">/// Number of blocks that a proposal remains live before a finalization tx can be called</span>
     <span class="kw">pub</span> <span class="ident">vote_period</span>: <span class="ident">u64</span>,
-    <span class="doccomment">/// proportion of ftoken-weighted votes OF TOTAL SUPPLY before quorum is reached. Unit in basis points (1/1000)</span>
+    <span class="doccomment">/// Proportion of ftoken-weighted votes OF TOTAL SUPPLY before quorum is reached. Unit in basis points (1/1000)</span>
     <span class="kw">pub</span> <span class="ident">vote_quorum</span>: <span class="ident">Uint128</span>,
-    <span class="doccomment">/// proportion of ftoken-weighted votes OF TOTAL SUPPLY that needs to vote `veto` for a veto to apply. Unit in basis points (1/1000)</span>
+    <span class="doccomment">/// Proportion of ftoken-weighted votes OF TOTAL SUPPLY that needs to vote `veto` for a veto to apply. Unit in basis points (1/1000)</span>
     <span class="kw">pub</span> <span class="ident">veto_threshold</span>: <span class="ident">Uint128</span>,
 }
 
@@ -431,7 +434,7 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FtokenInfo</span> {
     <span class="doccomment">/// ftoken contract instance information, created at initialization</span>
     <span class="kw">pub</span> <span class="ident">instance</span>: <span class="ident">FtokenInstance</span>,
-    <span class="doccomment">/// is underlying nft still in the vault (ie: fractionalized)</span>
+    <span class="doccomment">/// Is underlying nft still in the vault (ie: fractionalized)</span>
     <span class="kw">pub</span> <span class="ident">vault_active</span>: <span class="ident">bool</span>,
 }
 
@@ -441,17 +444,17 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FtokenInstance</span> {
     <span class="doccomment">/// ftoken contract index from the fractionalizer contract&#39;s perspective </span>
     <span class="kw">pub</span> <span class="ident">ftkn_idx</span>: <span class="ident">u32</span>,
-    <span class="doccomment">/// address which deposited the nft</span>
+    <span class="doccomment">/// Address which deposited the nft</span>
     <span class="kw">pub</span> <span class="ident">depositor</span>: <span class="ident">HumanAddr</span>,
-    <span class="doccomment">/// code hash and address of ftoken contract</span>
+    <span class="doccomment">/// Code hash and address of ftoken contract</span>
     <span class="kw">pub</span> <span class="ident">ftoken_contr</span>: <span class="ident">ContractInfo</span>,
-    <span class="doccomment">/// information on the underlying nft that was initially deposited</span>
+    <span class="doccomment">/// Information on the underlying nft that was initially deposited</span>
     <span class="kw">pub</span> <span class="ident">init_nft_info</span>: <span class="ident">UndrNftInfo</span>,
-    <span class="doccomment">/// name of ftoken</span>
+    <span class="doccomment">/// Name of ftoken</span>
     <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
-    <span class="doccomment">/// symbol of ftoken</span>
+    <span class="doccomment">/// Symbol of ftoken</span>
     <span class="kw">pub</span> <span class="ident">symbol</span>: <span class="ident">String</span>,
-    <span class="doccomment">/// decimal of ftoken</span>
+    <span class="doccomment">/// Decimal of ftoken</span>
     <span class="kw">pub</span> <span class="ident">decimals</span>: <span class="ident">u8</span>,
 }
 
@@ -459,15 +462,18 @@
 <span class="doccomment">/// initial configuration of fractionalized tokens</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">JsonSchema</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FtokenInit</span> {  <span class="comment">//FtokenConf</span>
-    <span class="doccomment">/// name of the ftoken</span>
+    <span class="doccomment">/// Name of the ftoken</span>
     <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
-    <span class="doccomment">/// symbol of the ftoken</span>
+    <span class="doccomment">/// Symbol of the ftoken</span>
     <span class="kw">pub</span> <span class="ident">symbol</span>: <span class="ident">String</span>,
-    <span class="doccomment">/// supply in the lowest denomination</span>
+    <span class="doccomment">/// Supply in the lowest denomination</span>
     <span class="kw">pub</span> <span class="ident">supply</span>: <span class="ident">Uint128</span>,
-    <span class="doccomment">/// determines the lowest denomination</span>
+    <span class="doccomment">/// Determines the lowest denomination</span>
     <span class="kw">pub</span> <span class="ident">decimals</span>: <span class="ident">u8</span>,
-    <span class="doccomment">/// initial reservation price which determines the initial min and max reservation price vote</span>
+    <span class="doccomment">/// Label String of the ftoken contract which will be instantiated. Instantiation of the new ftoken</span>
+    <span class="doccomment">/// contract will fail if the label already exists on another contract on Secret Network </span>
+    <span class="kw">pub</span> <span class="ident">contract_label</span>: <span class="ident">String</span>, 
+    <span class="doccomment">/// Initial reservation price which determines the initial min and max reservation price vote</span>
     <span class="doccomment">/// for the first user who votes on reservation price</span>
     <span class="kw">pub</span> <span class="ident">init_resv_price</span>: <span class="ident">Uint128</span>,
     <span class="doccomment">/// ftoken config which is stored in the ftoken contract</span>
@@ -477,15 +483,15 @@
 <span class="doccomment">/// Part of information sent from fractionalizer contract to ftoken contract on instantiation tx</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">JsonSchema</span>, <span class="ident">Default</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FtokenContrInit</span> {
-    <span class="doccomment">/// index of ftoken contract. Starts from 0 </span>
+    <span class="doccomment">/// Index of ftoken contract. Starts from 0 </span>
     <span class="kw">pub</span> <span class="ident">ftkn_idx</span>: <span class="ident">u32</span>,
-    <span class="doccomment">/// depositor of NFT into fractionalizer</span>
+    <span class="doccomment">/// Depositor of NFT into fractionalizer</span>
     <span class="kw">pub</span> <span class="ident">depositor</span>: <span class="ident">HumanAddr</span>,
-    <span class="doccomment">/// contract hash of fractionalizer</span>
+    <span class="doccomment">/// Contract hash of fractionalizer</span>
     <span class="kw">pub</span> <span class="ident">fract_hash</span>: <span class="ident">String</span>,
-    <span class="doccomment">/// underlying NFT info</span>
+    <span class="doccomment">/// Underlying NFT info</span>
     <span class="kw">pub</span> <span class="ident">nft_info</span>: <span class="ident">UndrNftInfo</span>,
-    <span class="doccomment">/// initial reservation price which determines the initial min and max reservation price vote</span>
+    <span class="doccomment">/// Initial reservation price which determines the initial min and max reservation price vote</span>
     <span class="doccomment">/// for the first user who votes on reservation price</span>
     <span class="kw">pub</span> <span class="ident">init_resv_price</span>: <span class="ident">Uint128</span>,
     <span class="doccomment">/// ftoken config which is stored in the ftoken contract</span>
@@ -495,18 +501,18 @@
 <span class="doccomment">/// code hash and address of a contract</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">JsonSchema</span>, <span class="ident">Default</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ContractInfo</span> {
-    <span class="doccomment">/// contract&#39;s code hash string</span>
+    <span class="doccomment">/// Contract&#39;s code hash string</span>
     <span class="kw">pub</span> <span class="ident">code_hash</span>: <span class="ident">String</span>,
-    <span class="doccomment">/// contract&#39;s address in HumanAddr</span>
+    <span class="doccomment">/// Contract&#39;s address in HumanAddr</span>
     <span class="kw">pub</span> <span class="ident">address</span>: <span class="ident">HumanAddr</span>,
 }
 
 <span class="doccomment">/// underlying NFT information</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">JsonSchema</span>, <span class="ident">Default</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">UndrNftInfo</span> {
-    <span class="doccomment">/// token id of underlying nft</span>
+    <span class="doccomment">/// Token id of underlying nft</span>
     <span class="kw">pub</span> <span class="ident">token_id</span>: <span class="ident">String</span>,
-    <span class="doccomment">/// contract code hash and address of contract of underlying nft </span>
+    <span class="doccomment">/// Contract code hash and address of contract of underlying nft </span>
     <span class="kw">pub</span> <span class="ident">nft_contr</span>: <span class="ident">ContractInfo</span>,
 }
 

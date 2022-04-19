@@ -613,7 +613,7 @@
     };
     
     <span class="kw">let</span> <span class="ident">cosmos_msg</span> <span class="op">=</span> <span class="ident">contract_msg</span>.<span class="ident">to_cosmos_msg</span>(
-        <span class="string">&quot;ftoken_contract&quot;</span>.<span class="ident">to_string</span>(), 
+        <span class="ident">ftkn_init</span>.<span class="ident">contract_label</span>, 
         <span class="ident">ftkn_id_hash_r</span>(<span class="kw-2">&amp;</span><span class="ident">deps</span>.<span class="ident">storage</span>).<span class="ident">load</span>()<span class="question-mark">?</span>.<span class="ident">code_id</span>,
         <span class="ident">callback_code_hash</span>,
         <span class="prelude-val">None</span>,

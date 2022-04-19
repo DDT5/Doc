@@ -4712,7 +4712,7 @@
             <span class="ident">try_vote_resv_price</span>, <span class="ident">try_bid</span>, <span class="ident">try_vote_proposal</span>, <span class="ident">try_finalize_auction</span>,
             <span class="ident">try_claim_proceeds</span>, <span class="ident">try_retrieve_bid</span>,
             },
-        <span class="ident">queries</span>::{<span class="ident">ftoken_queries</span>, <span class="ident">ftoken_permit_queries</span>, <span class="ident">debug_query</span>},
+        <span class="ident">queries</span>::{<span class="ident">ftoken_queries</span>, <span class="ident">ftoken_permit_queries</span>}, <span class="comment">//debug_query</span>
     }
 };
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ftoken_mod::ft_permit</span>::{<span class="ident">validate</span>, <span class="ident">Permission</span>, <span class="ident">Permit</span>, <span class="ident">RevokedPermits</span>};
@@ -5075,7 +5075,7 @@
         <span class="comment">// ftoken additions:</span>
         <span class="ident">QueryMsg::FtokenQuery</span>(<span class="ident">query</span>) =&gt; <span class="ident">ftoken_queries</span>(<span class="ident">deps</span>, <span class="ident">query</span>),
         <span class="comment">// temporary for DEBUGGING. Must remove for final implementation</span>
-        <span class="ident">QueryMsg::DebugQuery</span> {} =&gt; <span class="ident">debug_query</span>(<span class="ident">deps</span>),
+        <span class="comment">// QueryMsg::DebugQuery {} =&gt; debug_query(deps),</span>
         <span class="kw">_</span> =&gt; <span class="ident">viewing_keys_queries</span>(<span class="ident">deps</span>, <span class="ident">msg</span>),
     }
 }
